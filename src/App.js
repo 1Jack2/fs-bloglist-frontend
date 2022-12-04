@@ -6,6 +6,23 @@ import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
+const BlogList = ({blogs, setBlogs}) => {
+  const toggleVisible = (blogId) => {
+    setBlogs(
+      blogs.map(blog => (
+        blog.id === blogId
+        ? {...blog, _visible: !blog._visible}
+        : blog
+      ))
+    )
+  }
+  return <div>
+    {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} toggleVisible={() => toggleVisible(blog.id)}/>
+    )}
+  </div>
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -121,9 +138,7 @@ const App = () => {
           <h2>create new</h2>
           <BlogForm createNote={handleCreate} />
         </Togglable>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        <BlogList blogs={blogs} setBlogs={setBlogs}/>
       </div>
     )
   }

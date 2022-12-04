@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,7 +16,6 @@ const App = () => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
-  const [createBlogVisible, setCreateBlogVisible] = useState(false)
   // Notification
   const [notificationMsg, setNotificationMsg] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
@@ -119,8 +119,6 @@ const App = () => {
   )
 
   const blogForm = () => {
-    const hiddenWhenVisible = {display: createBlogVisible ? 'none' : ''}
-    const showWhenVisible = {display: createBlogVisible ? '' : 'none'}
     return (
       <div>
         <h2>blogs</h2>
@@ -129,13 +127,8 @@ const App = () => {
           {user.name} logged in
           <button onClick={handleLogout}>logout</button>
         </div>
-        <button
-          style={hiddenWhenVisible}
-          onClick={() => {setCreateBlogVisible(true)}}>
-          new note
-        </button>
-        <h2 style={showWhenVisible}>create new</h2>
-        <div style={showWhenVisible}>
+        <Togglable buttonLable='new note'>
+          <h2>create new</h2>
           <BlogForm
             handleSubmit={handleCreate}
             newBlogTitle={newBlogTitle}
@@ -145,8 +138,7 @@ const App = () => {
             newBlogUrl={newBlogUrl}
             handleBlogUrlChange={({target}) => setNewBlogUrl(target.value)}
           />
-          <button onClick={() => {setCreateBlogVisible(false)}}> cancel </button>
-        </div>
+        </Togglable>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}

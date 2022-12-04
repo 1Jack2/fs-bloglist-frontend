@@ -6,22 +6,6 @@ import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
-const BlogList = ({blogs, setBlogs}) => {
-  const toggleVisible = (blogId) => {
-    setBlogs(
-      blogs.map(blog => (
-        blog.id === blogId
-        ? {...blog, _visible: !blog._visible}
-        : blog
-      ))
-    )
-  }
-  return <div>
-    {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} toggleVisible={() => toggleVisible(blog.id)}/>
-    )}
-  </div>
-}
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -99,6 +83,22 @@ const App = () => {
     }
   }
 
+  const handleLike = async (toUpdateBlog) => {
+    try {
+      const data = await blogService.update(toUpdateBlog)
+      setBlogs(
+        blogs.map(blog => (
+          blog.id === data.id
+            ? {...data, _visible: true}
+            : blog
+        ))
+      )
+      setNewNotice(`like ${data.title} successfully`, null)
+    } catch (exception) {
+      setNewNotice(null, exception.response.data.error)
+    }
+  }
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -125,6 +125,32 @@ const App = () => {
     </div>
   )
 
+  const BlogList = ({blogs, setBlogs, handleLike}) => {
+    const toggleVisible = (blogId) => {
+      setBlogs(
+        blogs.map(blog => (
+          blog.id === blogId
+            ? {...blog, _visible: !blog._visible}
+            : blog
+        ))
+      )
+    }
+    const handleLikeClicked = (blog) => {
+      const blogCopy = {...blog, likes: blog.likes+1}
+      delete blogCopy._visible
+      handleLike(blogCopy)
+    }
+
+    return <div>
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog}
+        toggleVisible={() => toggleVisible(blog.id)}
+        handleLikeClicked={() => handleLikeClicked(blog)}
+        />
+      )}
+    </div>
+  }
+
   const blogForm = () => {
     return (
       <div>
@@ -138,7 +164,7 @@ const App = () => {
           <h2>create new</h2>
           <BlogForm createNote={handleCreate} />
         </Togglable>
-        <BlogList blogs={blogs} setBlogs={setBlogs}/>
+        <BlogList blogs={blogs} setBlogs={setBlogs} handleLike={handleLike} />
       </div>
     )
   }

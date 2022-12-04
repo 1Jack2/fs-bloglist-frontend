@@ -1,4 +1,4 @@
-const Blog = ({blog, toggleVisible}) => {
+const Blog = ({blog, toggleVisible, handleLikeClicked}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -14,21 +14,25 @@ const Blog = ({blog, toggleVisible}) => {
       </div>
       {
         blog._visible
-          ? (<div>
+          ? (
             <div>
-              {blog.url}
+              <div>
+                {blog.url}
+              </div>
+              <div>
+                {blog.likes}
+                <button onClick={handleLikeClicked}>
+                  like
+                </button>
+              </div>
+              <div>
+                {blog.author}
+              </div>
             </div>
-            <div>
-              {blog.likes}
-            </div>
-            <div>
-              {blog.author}
-            </div>
-          </div>)
+          )
           : <></>
-
       }
-    </div>
+    </div >
 
   )
 }

@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +14,30 @@ const App = () => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
+  // Notification
+  const [notificationMsg, setNotificationMsg] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
+  const notificationTimeout = 3000
+  const setNewNotice = (notificationMsg, errorMsg) => {
+
+    if (errorMsg) {
+      setErrorMsg(errorMsg)
+      setTimeout(() => {
+        setErrorMsg(null)
+      }, notificationTimeout);
+    } else {
+      setErrorMsg(null)
+    }
+
+    if (notificationMsg) {
+      setNotificationMsg(notificationMsg)
+      setTimeout(() => {
+        setNotificationMsg(null)
+      }, notificationTimeout);
+    } else {
+      setNotificationMsg(null)
+    }
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -39,7 +64,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.error(exception)
+      setNewNotice(null, exception.response.data.error)
     }
   }
 
@@ -57,13 +82,19 @@ const App = () => {
       author: newBlogAuthor,
       url: newBlogUrl,
     }
-    const data = await blogService.create(newBlog)
-    setBlogs(blogs.concat(data))
+    try {
+      const data = await blogService.create(newBlog)
+      setBlogs(blogs.concat(data))
+      setNewNotice(`a new blog ${data.title} by ${data.author} added`, null)
+    } catch (exception) {
+      setNewNotice(null, exception.response.data.error)
+    }
   }
 
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
+      <Notification notificationMsg={notificationMsg} errorMsg={errorMsg} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -89,6 +120,7 @@ const App = () => {
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
+      <Notification notificationMsg={notificationMsg} errorMsg={errorMsg} />
       <div>
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>

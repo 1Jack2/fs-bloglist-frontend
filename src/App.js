@@ -15,12 +15,12 @@ const App = () => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
+  const [createBlogVisible, setCreateBlogVisible] = useState(false)
   // Notification
   const [notificationMsg, setNotificationMsg] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
   const notificationTimeout = 3000
   const setNewNotice = (notificationMsg, errorMsg) => {
-
     if (errorMsg) {
       setErrorMsg(errorMsg)
       setTimeout(() => {
@@ -118,21 +118,41 @@ const App = () => {
     </div>
   )
 
-  const blogForm = () => (
-    <div>
-      <h2>blogs</h2>
-      <Notification notificationMsg={notificationMsg} errorMsg={errorMsg} />
+  const blogForm = () => {
+    const hiddenWhenVisible = {display: createBlogVisible ? 'none' : ''}
+    const showWhenVisible = {display: createBlogVisible ? '' : 'none'}
+    return (
       <div>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
+        <h2>blogs</h2>
+        <Notification notificationMsg={notificationMsg} errorMsg={errorMsg} />
+        <div>
+          {user.name} logged in
+          <button onClick={handleLogout}>logout</button>
+        </div>
+        <button
+          style={hiddenWhenVisible}
+          onClick={() => {setCreateBlogVisible(true)}}>
+          new note
+        </button>
+        <h2 style={showWhenVisible}>create new</h2>
+        <div style={showWhenVisible}>
+          <BlogForm
+            handleSubmit={handleCreate}
+            newBlogTitle={newBlogTitle}
+            handleBlogTitleChange={({target}) => setNewBlogTitle(target.value)}
+            newBlogAuthor={newBlogAuthor}
+            handleBlogAuthorChange={({target}) => setNewBlogAuthor(target.value)}
+            newBlogUrl={newBlogUrl}
+            handleBlogUrlChange={({target}) => setNewBlogUrl(target.value)}
+          />
+          <button onClick={() => {setCreateBlogVisible(false)}}> cancel </button>
+        </div>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
       </div>
-      <h2>create new</h2>
-      <BlogForm handleSubmit={handleCreate} newBlogTitle={newBlogTitle} handleBlogTitleChange={({target}) => setNewBlogTitle(target.value)} newBlogAuthor={newBlogAuthor} handleBlogAuthorChange={({target}) => setNewBlogAuthor(target.value)} newBlogUrl={newBlogUrl} handleBlogUrlChange={({target}) => setNewBlogUrl(target.value)} />
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  )
+    )
+  }
 
   return (
     <div>

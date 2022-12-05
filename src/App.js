@@ -8,11 +8,12 @@ import Togglable from './components/Togglable'
 
 
 const App = () => {
+  const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const sortBlogByLikes = (a, b) => (b.likes - a.likes)
+  const showBlog = (blog) => (blog.user === user.id)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const loggedBlogappUser = 'loggedBlogappUser'
   // Notification
   const [notificationMsg, setNotificationMsg] = useState(null)
@@ -76,7 +77,8 @@ const App = () => {
 
   const handleCreate = async (newBlog) => {
     try {
-      const data = await blogService.create(newBlog)
+      const newBlogWithUser = {...newBlog, user: user.id}
+      const data = await blogService.create(newBlogWithUser)
       setBlogs(blogs.concat(data))
       setNewNotice(`a new blog ${data.title} by ${data.author} added`, null)
     } catch (exception) {
@@ -84,9 +86,9 @@ const App = () => {
     }
   }
 
-  const handleLike = async (toUpdateBlog) => {
+  const handleUpdate = async (updatingBlog) => {
     try {
-      const data = await blogService.update(toUpdateBlog)
+      const data = await blogService.update(updatingBlog)
       setBlogs(
         blogs.map(blog => (
           blog.id === data.id
@@ -95,6 +97,20 @@ const App = () => {
         )).sort(sortBlogByLikes)
       )
       setNewNotice(`like ${data.title} successfully`, null)
+    } catch (exception) {
+      setNewNotice(null, exception.response.data.error)
+    }
+  }
+
+  const handleDelete = async (deletingBlog) => {
+    if (window.confirm(`Removing blog ${deletingBlog.title} by ${deletingBlog.author}`))
+    try {
+      const data = await blogService.del(deletingBlog.id)
+      setBlogs(
+        blogs.filter(blog => blog.id !== deletingBlog.id)
+          .sort(sortBlogByLikes)
+      )
+      setNewNotice(`delete ${data.title} successfully`, null)
     } catch (exception) {
       setNewNotice(null, exception.response.data.error)
     }
@@ -126,7 +142,7 @@ const App = () => {
     </div>
   )
 
-  const BlogList = ({blogs, setBlogs, handleLike}) => {
+  const BlogList = ({blogs, setBlogs, handleUpdate, handleDelete, showBlog}) => {
     const toggleVisible = (blogId) => {
       setBlogs(
         blogs.map(blog => (
@@ -136,17 +152,19 @@ const App = () => {
         ))
       )
     }
-    const handleLikeClicked = (blog) => {
-      const blogCopy = {...blog, likes: blog.likes+1}
+    const handleLike = (blog) => {
+      const blogCopy = {...blog, likes: blog.likes + 1}
       delete blogCopy._visible
-      handleLike(blogCopy)
+      handleUpdate(blogCopy)
     }
 
     return <div>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog}
-        toggleVisible={() => toggleVisible(blog.id)}
-        handleLikeClicked={() => handleLikeClicked(blog)}
+          toggleVisible={() => toggleVisible(blog.id)}
+          handleLike={handleLike}
+          handleDelete={handleDelete}
+          showBlog = {showBlog}
         />
       )}
     </div>
@@ -165,7 +183,13 @@ const App = () => {
           <h2>create new</h2>
           <BlogForm createNote={handleCreate} />
         </Togglable>
-        <BlogList blogs={blogs} setBlogs={setBlogs} handleLike={handleLike} />
+        <BlogList
+          blogs={blogs}
+          setBlogs={setBlogs}
+          handleUpdate={handleUpdate}
+          handleDelete={handleDelete}
+          showBlog={showBlog}
+        />
       </div>
     )
   }

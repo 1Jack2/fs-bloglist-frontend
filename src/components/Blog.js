@@ -1,4 +1,4 @@
-const Blog = ({blog, toggleVisible, handleLikeClicked}) => {
+const Blog = ({blog, toggleVisible, handleLike, handleDelete, showBlog}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -21,13 +21,16 @@ const Blog = ({blog, toggleVisible, handleLikeClicked}) => {
               </div>
               <div>
                 {blog.likes}
-                <button onClick={handleLikeClicked}>
-                  like
-                </button>
+                <button onClick={() => handleLike(blog)}> like </button>
               </div>
               <div>
                 {blog.author}
               </div>
+              {
+                showBlog(blog)
+                  ? <button onClick={() => handleDelete(blog)}>delete</button>
+                  : <></>
+              }
             </div>
           )
           : <></>

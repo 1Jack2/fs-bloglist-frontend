@@ -48,7 +48,9 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(loggedBlogappUser)
     if (loggedUserJSON) {
-      setUser(JSON.parse(loggedUserJSON))
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 

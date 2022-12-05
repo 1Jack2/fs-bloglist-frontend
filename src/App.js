@@ -9,6 +9,7 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const sortBlogByLikes = (a, b) => (b.likes - a.likes)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -39,7 +40,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort(sortBlogByLikes))
     )
   }, [])
 
@@ -91,7 +92,7 @@ const App = () => {
           blog.id === data.id
             ? {...data, _visible: true}
             : blog
-        ))
+        )).sort(sortBlogByLikes)
       )
       setNewNotice(`like ${data.title} successfully`, null)
     } catch (exception) {

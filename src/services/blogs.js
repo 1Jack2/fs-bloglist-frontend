@@ -14,7 +14,7 @@ const getAll = () => {
 
 const create = async (newBlog) => {
   const config = {
-    headers: {Authorization: token}
+    headers: { Authorization: token }
   }
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
@@ -22,7 +22,7 @@ const create = async (newBlog) => {
 
 const update = async (blog) => {
   const config = {
-    headers: {Authorization: token}
+    headers: { Authorization: token }
   }
   const response = await axios.put(`${baseUrl}/${blog.id}`, blog, config)
   return response.data
@@ -30,7 +30,7 @@ const update = async (blog) => {
 
 const del = async (blogId) => {
   const config = {
-    headers: {Authorization: token}
+    headers: { Authorization: token }
   }
   const response = await axios.delete(`${baseUrl}/${blogId}`, config)
   return response.data

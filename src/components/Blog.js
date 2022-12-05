@@ -1,4 +1,4 @@
-const Blog = ({blog, toggleVisible, handleLike, handleDelete, showBlog}) => {
+const Blog = ({ blog, toggleVisible, handleLike, handleDelete, showBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,

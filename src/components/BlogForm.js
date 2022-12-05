@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState } from 'react'
 
 const BlogForm = ({
   createNote,
@@ -25,7 +25,7 @@ const BlogForm = ({
         <input
           type='text'
           value={newBlogTitle}
-          onChange={({target}) => setNewBlogTitle(target.value)}
+          onChange={({ target }) => setNewBlogTitle(target.value)}
         />
       </div>
       <div>
@@ -33,7 +33,7 @@ const BlogForm = ({
         <input
           type='text'
           value={newBlogAuthor}
-          onChange={({target}) => setNewBlogAuthor(target.value)}
+          onChange={({ target }) => setNewBlogAuthor(target.value)}
         />
       </div>
       <div>
@@ -41,7 +41,7 @@ const BlogForm = ({
         <input
           type='text'
           value={newBlogUrl}
-          onChange={({target}) => setNewBlogUrl(target.value)}
+          onChange={({ target }) => setNewBlogUrl(target.value)}
         />
       </div>
       <button type='submit'>create</button>

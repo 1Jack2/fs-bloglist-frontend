@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -24,7 +24,7 @@ const App = () => {
       setErrorMsg(errorMsg)
       setTimeout(() => {
         setErrorMsg(null)
-      }, notificationTimeout);
+      }, notificationTimeout)
     } else {
       setErrorMsg(null)
     }
@@ -33,7 +33,7 @@ const App = () => {
       setNotificationMsg(notificationMsg)
       setTimeout(() => {
         setNotificationMsg(null)
-      }, notificationTimeout);
+      }, notificationTimeout)
     } else {
       setNotificationMsg(null)
     }
@@ -54,8 +54,8 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    const credentials = {username, password}
-    console.log('log in with', username, password);
+    const credentials = { username, password }
+    console.log('log in with', username, password)
     try {
       const user = await loginService.login(credentials)
       window.localStorage.setItem(loggedBlogappUser, JSON.stringify(user))
@@ -77,7 +77,7 @@ const App = () => {
 
   const handleCreate = async (newBlog) => {
     try {
-      const newBlogWithUser = {...newBlog, user: user.id}
+      const newBlogWithUser = { ...newBlog, user: user.id }
       const data = await blogService.create(newBlogWithUser)
       setBlogs(blogs.concat(data))
       setNewNotice(`a new blog ${data.title} by ${data.author} added`, null)
@@ -92,7 +92,7 @@ const App = () => {
       setBlogs(
         blogs.map(blog => (
           blog.id === data.id
-            ? {...data, _visible: true}
+            ? { ...data, _visible: true }
             : blog
         )).sort(sortBlogByLikes)
       )
@@ -104,16 +104,16 @@ const App = () => {
 
   const handleDelete = async (deletingBlog) => {
     if (window.confirm(`Removing blog ${deletingBlog.title} by ${deletingBlog.author}`))
-    try {
-      const data = await blogService.del(deletingBlog.id)
-      setBlogs(
-        blogs.filter(blog => blog.id !== deletingBlog.id)
-          .sort(sortBlogByLikes)
-      )
-      setNewNotice(`delete ${data.title} successfully`, null)
-    } catch (exception) {
-      setNewNotice(null, exception.response.data.error)
-    }
+      try {
+        const data = await blogService.del(deletingBlog.id)
+        setBlogs(
+          blogs.filter(blog => blog.id !== deletingBlog.id)
+            .sort(sortBlogByLikes)
+        )
+        setNewNotice(`delete ${data.title} successfully`, null)
+      } catch (exception) {
+        setNewNotice(null, exception.response.data.error)
+      }
   }
 
   const loginForm = () => (
@@ -126,7 +126,7 @@ const App = () => {
           <input
             type='text'
             value={username}
-            onChange={({target}) => setUsername(target.value)}
+            onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
@@ -134,7 +134,7 @@ const App = () => {
           <input
             type='password'
             value={password}
-            onChange={({target}) => setPassword(target.value)}
+            onChange={({ target }) => setPassword(target.value)}
           />
         </div>
         <button type='submit'>login</button>
@@ -142,18 +142,18 @@ const App = () => {
     </div>
   )
 
-  const BlogList = ({blogs, setBlogs, handleUpdate, handleDelete, showBlog}) => {
+  const BlogList = ({ blogs, setBlogs, handleUpdate, handleDelete, showBlog }) => {
     const toggleVisible = (blogId) => {
       setBlogs(
         blogs.map(blog => (
           blog.id === blogId
-            ? {...blog, _visible: !blog._visible}
+            ? { ...blog, _visible: !blog._visible }
             : blog
         ))
       )
     }
     const handleLike = (blog) => {
-      const blogCopy = {...blog, likes: blog.likes + 1}
+      const blogCopy = { ...blog, likes: blog.likes + 1 }
       delete blogCopy._visible
       handleUpdate(blogCopy)
     }

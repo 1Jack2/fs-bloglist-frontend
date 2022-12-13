@@ -183,7 +183,7 @@ const App = () => {
         </div>
         <Togglable buttonLabel='new note'>
           <h2>create new</h2>
-          <BlogForm createNote={handleCreate} />
+          <BlogForm createBlog={handleCreate} />
         </Togglable>
         <BlogList
           blogs={blogs}

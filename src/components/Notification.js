@@ -16,7 +16,7 @@ const Notification = (props) => {
 
   if (errorMsg !== null) {
     return (
-      <div style={errorStyle}>
+      <div className="error" style={errorStyle}>
         {errorMsg}
       </div>
     )
@@ -24,7 +24,7 @@ const Notification = (props) => {
 
   if (notificationMsg !== null) {
     return (
-      <div style={notificationStyle}>
+      <div className="notification" style={notificationStyle}>
         {notificationMsg}
       </div>
     )

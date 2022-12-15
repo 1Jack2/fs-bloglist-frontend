@@ -112,6 +112,35 @@ describe('Note app', function () {
         .and('have.css', 'borderStyle', 'solid')
     })
 
+    it('blog list are ordered by likes desc', function () {
+      const likesEq1 = {
+        title: 'test-title-likesEq1',
+        author: 'test-author',
+        url: 'test-url',
+        likes: 1
+      }
+      const likesEq2 = {
+        title: 'test-title-likesEq2',
+        author: 'test-author',
+        url: 'test-url',
+        likes: 2
+      }
+      const likesEq3 = {
+        title: 'test-title-likesEq3',
+        author: 'test-author',
+        url: 'test-url',
+        likes: 3
+      }
+      cy.createBlog(likesEq1)
+      cy.createBlog(likesEq3)
+      cy.createBlog(likesEq2)
+      cy.visit('http://localhost:3000')
+
+      cy.get('.blog').eq(0).should('contain', 'test-title-likesEq3')
+      cy.get('.blog').eq(1).should('contain', 'test-title-likesEq2')
+      cy.get('.blog').eq(2).should('contain', 'test-title-likesEq1')
+    })
+
   })
 })
 

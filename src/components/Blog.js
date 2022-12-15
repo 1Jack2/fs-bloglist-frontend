@@ -8,14 +8,14 @@ const Blog = ({ blog, toggleVisible, handleLike, handleDelete, showBlog }) => {
   }
   return (
     <div style={blogStyle}>
-      <div>
+      <div className="blog">
         {blog.title}
         <button onClick={toggleVisible}>{blog._visible ? 'hide' : 'view'}</button>
       </div>
       {
         blog._visible
           ? (
-            <div>
+            <div className="blog">
               <div>
                 {blog.url}
               </div>

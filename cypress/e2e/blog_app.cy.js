@@ -41,12 +41,12 @@ describe('Note app', function () {
     })
   })
 
-  describe('when logged in', function () {
+  describe.only('when logged in', function () {
     beforeEach(function () {
       cy.login({ username: 'j3z', password: '12345' })
     })
 
-    it.only('a new blog can be created', function () {
+    it('a new blog can be created', function () {
       cy.contains('new blog').click()
       const data = {
         title: 'test-title',
@@ -63,6 +63,36 @@ describe('Note app', function () {
         .and('have.css', 'color', 'rgb(0, 128, 0)')
         .and('have.css', 'borderStyle', 'solid')
     })
+
+    it('a blog detail can be viewed', function () {
+      const data = {
+        title: 'test-title',
+        author: 'test-author',
+        url: 'test-url',
+      }
+      cy.createBlog(data)
+
+      cy.contains('view').click()
+      cy.contains('test-title')
+      cy.contains('test-author')
+      cy.contains('test-url')
+      cy.contains('0')
+    })
+
+    it.only('a blog can be liked', function () {
+      const data = {
+        title: 'test-title',
+        author: 'test-author',
+        url: 'test-url',
+      }
+      cy.createBlog(data)
+      cy.contains('view').click()
+
+      cy.contains('like').click()
+      cy.get('#blog-likes')
+        .should('contain', '1')
+    })
+
   })
 })
 

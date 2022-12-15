@@ -19,7 +19,7 @@ const Blog = ({ blog, toggleVisible, handleLike, handleDelete, showBlog }) => {
               <div>
                 {blog.url}
               </div>
-              <div placeholder='blog-likes' >
+              <div id='blog-likes' placeholder='blog-likes' >
                 {blog.likes}
                 <button onClick={() => handleLike(blog)}> like </button>
               </div>

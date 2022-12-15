@@ -79,7 +79,7 @@ describe('Note app', function () {
       cy.contains('0')
     })
 
-    it.only('a blog can be liked', function () {
+    it('a blog can be liked', function () {
       const data = {
         title: 'test-title',
         author: 'test-author',
@@ -91,6 +91,22 @@ describe('Note app', function () {
       cy.contains('like').click()
       cy.get('#blog-likes')
         .should('contain', '1')
+    })
+
+    it.only('a blog can be deleted', function () {
+      const data = {
+        title: 'test-title',
+        author: 'test-author',
+        url: 'test-url',
+      }
+      cy.createBlog(data)
+      cy.contains('view').click()
+
+      cy.contains('delete').click()
+      cy.get('.notification')
+        .should('contain', 'delete undefined successfully')
+        .and('have.css', 'color', 'rgb(0, 128, 0)')
+        .and('have.css', 'borderStyle', 'solid')
     })
 
   })

@@ -71,6 +71,7 @@ describe('Note app', function () {
         url: 'test-url',
       }
       cy.createBlog(data)
+      cy.visit('http://localhost:3000')
 
       cy.contains('view').click()
       cy.contains('test-title')
@@ -86,6 +87,7 @@ describe('Note app', function () {
         url: 'test-url',
       }
       cy.createBlog(data)
+      cy.visit('http://localhost:3000')
       cy.contains('view').click()
 
       cy.contains('like').click()
@@ -93,13 +95,14 @@ describe('Note app', function () {
         .should('contain', '1')
     })
 
-    it.only('a blog can be deleted', function () {
+    it('a blog can be deleted', function () {
       const data = {
         title: 'test-title',
         author: 'test-author',
         url: 'test-url',
       }
       cy.createBlog(data)
+      cy.visit('http://localhost:3000')
       cy.contains('view').click()
 
       cy.contains('delete').click()

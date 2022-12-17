@@ -43,7 +43,4 @@ Cypress.Commands.add('createBlog', ({ title, url, author, likes }) => {
     body: { title, url, author, likes: likes ? parseInt(likes) : 0 },
     headers: { Authorization: token }
   })
-    .then(() => {
-      cy.visit('http://localhost:3000')
-    })
 })
